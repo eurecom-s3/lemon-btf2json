@@ -61,7 +61,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ### Clone and build `btf2json`:
 
 ```bash
-git clone https://github.com/CaptWake/btf2json.git
+git clone https://github.com/eurecom-s3/lemon-btf2json btf2json
 cd btf2json
 cargo build --release
 ```
@@ -99,33 +99,14 @@ Volatility3 uses a strict JSON schema to validate profiles, so we need to patch 
 1. **Clone the Volatility3 repository (if not already cloned):**
 
    ```bash
-   git clone https://github.com/volatilityfoundation/volatility3.git
+   git clone https://github.com/eurecom-s3/volatility3-arm64.git volatility3
    cd volatility3
    ```
 
-2. **Create the patch file:**
-
-   Create a file named `btf_support.patch` with the following content:
-
-   ```patch
-    diff --git a/volatility3/schemas/schema-6.2.0.json b/volatility3/schemas/schema-6.2.0.json
-    index 1f388005..65a6f5c6 100644
-    --- a/volatility3/schemas/schema-6.2.0.json
-    +++ b/volatility3/schemas/schema-6.2.0.json
-    @@ -105,7 +105,7 @@
-          "properties": {
-            "kind": {
-              "type": "string",
-    -          "pattern": "^(dwarf|symtab|system-map)$"
-    +          "pattern": "^(btf|symdb|dwarf|symtab|system-map)$"
-            },
-            "name": {
-              "type": "string"
-   ```
-
-3. **Apply the patch with Git:**
+2. **Apply the patch file located in this repo with Git:**
 
    ```bash
+   mv ../btf2json/utilities/btf_support.patch
    git apply btf_support.patch
    ```
 
@@ -139,7 +120,7 @@ Volatility3 uses a strict JSON schema to validate profiles, so we need to patch 
 Run your Volatility3 plugin of choice:
 
 ```bash
-./vol.py -s <path to profile.json> -f <path to mem_dump> <plugin>
+./vol.py -s <folder path that contains profile.json> -f <path to mem_dump> <plugin>
 ```
 
 >  **Tip**: Add `-vvvvvvv` to increase verbosity for plugin debugging.

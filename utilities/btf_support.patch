@@ -1,0 +1,13 @@
+diff --git a/volatility3/schemas/schema-6.2.0.json b/volatility3/schemas/schema-6.2.0.json
+index 1f388005..65a6f5c6 100644
+--- a/volatility3/schemas/schema-6.2.0.json
++++ b/volatility3/schemas/schema-6.2.0.json
+@@ -105,7 +105,7 @@
+       "properties": {
+         "kind": {
+           "type": "string",
+-          "pattern": "^(dwarf|symtab|system-map)$"
++          "pattern": "^(btf|symdb|dwarf|symtab|system-map)$"
+         },
+         "name": {
+           "type": "string"
