@@ -36,6 +36,9 @@ cat /sys/kernel/btf/vmlinux > btf_symb
 ./<lemon_binary> -d mem_dump
 ```
 
+> [!note]
+> Make sure to also collect the banner printed by the lemon binary, this will be used in the profile generation with btf2json
+
 ---
 
 ## 💻 Step 4: Transfer Files to Host
@@ -69,7 +72,7 @@ cargo build --release
 ### Generate Volatility3 Profile:
 
 ```bash
-# Replace <android banner> with output of `uname -a` from Android shell
+# Replace <android banner> with the one displayed by the lemon output
 # Replace <android architecture> with `x86_64` or `arm64`
 ./target/release/btf2json \
   --map ../kallsyms \
