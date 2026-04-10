@@ -17,11 +17,12 @@ mod quirks {
     use super::*;
     use std::collections::btree_map::Entry;
 
-    /// Adds a base type named "pointer" with the appropriate size and
-    /// endianness.
+    /// Adds base types required by Volatility 3 that BTF does not expose
     pub fn fixup_base(base_types: &mut BTreeMap<String, v_types::Base>, endian: &btf::Endian) {
-        if let Entry::Vacant(ent) = base_types.entry(String::from("pointer")) {
-            ent.insert(v_types::Base::new_pointer(endian.into()));
+        for name in ["pointer", "long unsigned int"] {
+            if let Entry::Vacant(ent) = base_types.entry(String::from(name)) {
+                ent.insert(v_types::Base::new_pointer(endian.into()));
+            }
         }
     }
 }

@@ -73,14 +73,10 @@ cargo build --release
 
 ```bash
 # Replace <android banner> with the one displayed by the lemon output
-# Replace <android architecture> with `x86_64` or `arm64`
 ./target/release/btf2json \
   --map ../kallsyms \
   --btf ../btf_symb \
-  --arch <android architecture> \
   --banner "<android banner>" > profile.json
-
-python utilities/patch_profile.py -f ./profile.json
 ```
 
 > ❗ **Expected Warning**:
