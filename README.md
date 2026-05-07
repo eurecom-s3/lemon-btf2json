@@ -72,10 +72,11 @@ cargo build --release
 ### Generate Volatility3 Profile:
 
 ```bash
-# Replace <android banner> with the one displayed by the lemon output
+# Replace <android banner> and <vabits> with the values displayed in the lemon output
 ./target/release/btf2json \
   --map ../kallsyms \
   --btf ../btf_symb \
+  --vabits <vabits> \
   --banner "<android banner>" > profile.json
 ```
 
