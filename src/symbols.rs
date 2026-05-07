@@ -78,8 +78,7 @@ pub struct Symbols {
     name_map: Option<String>,
     raw_symdb: Option<&'static [u8]>,
     name_symdb: Option<&'static str>,
-    symbols: HashMap<String, Symbol>,
-    base_offset: u64, // value of _stext in System.map, used to remove KASLR shift
+    symbols: HashMap<String, Symbol>
 }
 
 impl IntoIterator for Symbols {
@@ -256,28 +255,8 @@ impl SymbolsBuilder {
                 _ => bail!("Invalid format of system map: {}", line),
             };
         }
-
-        let stext_addr: u64 = match system_map_symbols.get("_stext") {
-            Some(sym) => sym.addr,
-            _ => bail!("No _stext symbol found in system map."),
-        };
-
-        self.0.symbols = system_map_symbols
-            .iter()
-            .map(|(name, sym)| {
-                let addr = sym.addr - (stext_addr - self.0.base_offset);
-                (
-                    String::from(name),
-                    Symbol {
-                        addr,
-                        t: sym.t.clone(),
-                        kind: sym.kind,
-                        scope: sym.scope,
-                        constant_data: None,
-                    },
-                )
-            })
-            .collect();
+        
+        self.0.symbols.extend(system_map_symbols);
 
         // record metadata
         let name_map = String::from(
@@ -332,19 +311,6 @@ impl SymbolsBuilder {
 
         Ok(self)
     }
-
-    fn add_base_offset_from_cli(mut self, cli: &Cli) -> Self {
-        match cli.arch {
-            // Default offset value for x86_64
-            crate::cli::Architecture::X86_64 => self.0.base_offset = 0xffffffff81000000,
-            // Default offset value for arm64
-            crate::cli::Architecture::Arm64 => self.0.base_offset = 0xffff800080010000,
-        }
-
-        log::debug!("Base offset set to {:#x}", self.0.base_offset);
-
-        self
-    }
 }
 
 impl TryFrom<&Cli> for SymbolsBuilder {
@@ -354,7 +320,6 @@ impl TryFrom<&Cli> for SymbolsBuilder {
         let sym_builder = if cli.map.is_some() {
             log::debug!("Got System.map file for symbol addresses.");
             SymbolsBuilder::new()
-                .add_base_offset_from_cli(cli)
                 .add_from_system_map(cli.map.as_ref().unwrap())
         } else if cli.image.is_some() {
             log::debug!("Got memory image, extracting symbol information.");

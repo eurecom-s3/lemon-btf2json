@@ -72,15 +72,12 @@ cargo build --release
 ### Generate Volatility3 Profile:
 
 ```bash
-# Replace <android banner> with the one displayed by the lemon output
-# Replace <android architecture> with `x86_64` or `arm64`
+# Replace <android banner> and <vabits> with the values displayed in the lemon output
 ./target/release/btf2json \
   --map ../kallsyms \
   --btf ../btf_symb \
-  --arch <android architecture> \
+  --vabits <vabits> \
   --banner "<android banner>" > profile.json
-
-python utilities/patch_profile.py -f ./profile.json
 ```
 
 > ❗ **Expected Warning**:

@@ -1,23 +1,7 @@
 //! Command-line interface.
 
 use std::path::PathBuf;
-
 use clap::Parser;
-use clap::ValueEnum;
-
-#[derive(Debug, Clone, ValueEnum)]
-pub enum Architecture {
-    #[value(name = "x86_64")]
-    X86_64,
-    #[value(name = "arm64")]
-    Arm64,
-}
-
-impl Default for Architecture {
-    fn default() -> Self {
-        Architecture::X86_64
-    }
-}
 
 #[derive(Parser, Debug)]
 #[clap(name = "btf2json", author = "Valentin Obst")]
@@ -44,11 +28,11 @@ pub struct Cli {
     #[clap(long = "debug")]
     /// Display more debug output.
     pub debug: bool,
-    /// Define the architecture of the system for which the ISF is generated.
-    #[clap(long = "arch", value_enum, default_value_t = Architecture::default())]
-    pub arch: Architecture,
+    #[clap(long = "image")]
     /// Memory image to extract type and/or symbol information from (not
     /// implemented).
-    #[clap(long = "image")]
     pub image: Option<PathBuf>,
+    #[clap(long = "vabits")]
+    /// The VA Bits number (obtainable from lemon output)
+    pub vabits: u8,
 }

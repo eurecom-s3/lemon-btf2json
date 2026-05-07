@@ -17,11 +17,12 @@ mod quirks {
     use super::*;
     use std::collections::btree_map::Entry;
 
-    /// Adds a base type named "pointer" with the appropriate size and
-    /// endianness.
+    /// Adds base types required by Volatility 3 that BTF does not expose
     pub fn fixup_base(base_types: &mut BTreeMap<String, v_types::Base>, endian: &btf::Endian) {
-        if let Entry::Vacant(ent) = base_types.entry(String::from("pointer")) {
-            ent.insert(v_types::Base::new_pointer(endian.into()));
+        for name in ["pointer", "long unsigned int"] {
+            if let Entry::Vacant(ent) = base_types.entry(String::from(name)) {
+                ent.insert(v_types::Base::new_pointer(endian.into()));
+            }
         }
     }
 }
@@ -132,6 +133,19 @@ impl TryFrom<GenerationContext> for Isf {
 }
 
 impl Isf {
+    
+    pub fn fixup_vabits(&mut self, vabits: u8) {
+        self.symbols
+            .insert(String::from("__lemon_va_bits"),{
+                v_symbols::Symbol::new(
+                    vabits as u64,
+                    v_types::TypeDescr::Base {
+                        name: String::from("long unsigned int"),
+                    },
+                )
+            });
+    }
+
     /// Writes a valid ISF file to stdout.
     pub fn dump_stdout(&self) {
         log::debug!(

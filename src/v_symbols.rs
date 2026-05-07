@@ -26,6 +26,12 @@ pub struct Symbol {
     constant_data: Option<String>,
 }
 
+impl Symbol {
+    pub fn new(address: u64, t: v_types::TypeDescr) -> Self {
+        Symbol { address, t, linkage: None, constant_data: None }
+    }
+}
+
 impl From<symbols::Symbol> for Symbol {
     fn from(mut sym: symbols::Symbol) -> Self {
         Symbol {
