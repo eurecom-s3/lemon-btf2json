@@ -28,8 +28,11 @@ pub struct Cli {
     #[clap(long = "debug")]
     /// Display more debug output.
     pub debug: bool,
+    #[clap(long = "image")]
     /// Memory image to extract type and/or symbol information from (not
     /// implemented).
-    #[clap(long = "image")]
     pub image: Option<PathBuf>,
+    #[clap(long = "vabits")]
+    /// The VA Bits number (obtainable from lemon output)
+    pub vabits: u8,
 }

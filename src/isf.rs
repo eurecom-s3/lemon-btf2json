@@ -133,6 +133,19 @@ impl TryFrom<GenerationContext> for Isf {
 }
 
 impl Isf {
+    
+    pub fn fixup_vabits(&mut self, vabits: u8) {
+        self.symbols
+            .insert(String::from("__lemon_va_bits"),{
+                v_symbols::Symbol::new(
+                    vabits as u64,
+                    v_types::TypeDescr::Base {
+                        name: String::from("long unsigned int"),
+                    },
+                )
+            });
+    }
+
     /// Writes a valid ISF file to stdout.
     pub fn dump_stdout(&self) {
         log::debug!(

@@ -32,6 +32,7 @@ fn main() {
         };
         match Isf::try_from(ctx) {
             Ok(mut isf) => {
+                isf.fixup_vabits(cli.vabits);
                 // We do not fail if types are broken.
                 let _ = isf.fix_symbol_types();
                 if cfg!(debug_assertions) {
